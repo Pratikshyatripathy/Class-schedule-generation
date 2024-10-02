@@ -1,4 +1,4 @@
-# Project Title
+# CLASS SCHEDULE GENERATION
 
 This project is created using **HTML**, **CSS**, **JavaScript**, and **Bootstrap**.
 
@@ -31,7 +31,8 @@ To see the output of this project:
 
 ## Screenshot
 
-![Project Screenshot](path/to/screenshot.png)
+![Screenshot (105)](https://github.com/user-attachments/assets/40e2e194-d093-48f7-8e5a-67dd72fde678)
+
 
 ## How to Run
 
