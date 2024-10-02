@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class Schedule Generator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+        }
+
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
+            margin: 30px auto;
+        }
+
+        h2 {
+            color: #007bff;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        h3 {
+            color: #343a40;
+            margin-top: 30px;
+        }
+
+        .form-label {
+            font-weight: bold;
+            color: #343a40;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            width: 100%;
+            font-weight: bold;
+        }
+
+        .schedule-table {
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .schedule-table th {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+        }
+
+        .schedule-table td {
+            text-align: center;
+        }
+
+        .suggested {
+            background-color: #d4edda;
+        }
+
+        .conflict {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .btn-danger {
+            font-size: 0.9rem;
+        }
+
+        .action-icons {
+            font-size: 1.2rem;
+        }
+
+        .fa-trash {
+            color: #dc3545;
+        }
+        @media (max-width: 768px) {
+            .btn-primary {
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2><i class="fas fa-calendar-alt"></i> Class Schedule Generator</h2>
+        <form id="scheduleForm" class="mb-4">
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label for="subject" class="form-label">Subject</label>
+                    <input type="text" id="subject" class="form-control" placeholder="Enter subject">
+                </div>
+                <div class="col-md-4">
+                    <label for="professor" class="form-label">Professor</label>
+                    <select id="professor" class="form-select">
+                        <option value="">Select professor</option>
+                        <option value="Prof. Smith">Prof. Smith</option>
+                        <option value="Prof. Johnson">Prof. Johnson</option>
+                        <option value="Prof. Brown">Prof. Brown</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="timeSlot" class="form-label">Preferred Time Slot</label>
+                    <select id="timeSlot" class="form-select">
+                        <option value="">Select time slot</option>
+                        <option value="9:00 AM - 10:00 AM">9:00 AM - 10:00 AM</option>
+                        <option value="10:00 AM - 11:00 AM">10:00 AM - 11:00 AM</option>
+                        <option value="11:00 AM - 12:00 PM">11:00 AM - 12:00 PM</option>
+                    </select>
+                </div>
+            </div>
+            <button type="button" class="btn btn-primary" id="generateBtn">Generate Schedule</button>
+        </form>
+
+        <h3><i class="fas fa-table"></i> Generated Schedule</h3>
+        <table class="table table-bordered schedule-table">
+            <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>Professor</th>
+                    <th>Time Slot</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="scheduleTableBody">
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+<script>
+    $(document).ready(function() {
+    const existingSchedules = []; 
+
+    $('#generateBtn').on('click', function() {
+        const subject = $('#subject').val();
+        const professor = $('#professor').val();
+        const timeSlot = $('#timeSlot').val();
+
+        if (subject && professor && timeSlot) {
+            const scheduleRow = `
+                <tr class="${checkConflict(professor, timeSlot) ? 'conflict' : 'suggested'}">
+                    <td>${subject}</td>
+                    <td>${professor}</td>
+                    <td>${timeSlot}</td>
+                    <td>
+                        <i class="fas fa-trash action-icons delete-row" title="Delete"></i>
+                    </td>
+                </tr>
+            `;
+            $('#scheduleTableBody').append(scheduleRow);
+            existingSchedules.push({ professor, timeSlot });
+
+            clearForm();
+        } else {
+            alert('Please fill all fields');
+        }
+    });
+
+    $(document).on('click', '.delete-row', function() {
+        $(this).closest('tr').remove();
+    });
+
+    function clearForm() {
+        $('#subject').val('');
+        $('#professor').val('');
+        $('#timeSlot').val('');
+    }
+
+    function checkConflict(professor, timeSlot) {
+        return existingSchedules.some(
+            schedule => schedule.professor === professor && schedule.timeSlot === timeSlot
+        );
+    }
+});
+</script>
